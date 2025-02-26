@@ -1,12 +1,22 @@
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+def analyze_values(actual_values, predicted_values):
+    """
+    Compares actual vs. predicted values and calculates the percentage difference where
+    actual values are lower than predicted.
 
-def compute_metrics(y_true, y_pred):
-    metrics = {
-        "accuracy": accuracy_score(y_true, y_pred),
-        "precision": precision_score(y_true, y_pred, average='weighted'),
-        "recall": recall_score(y_true, y_pred, average='weighted'),
-        "f1_score": f1_score(y_true, y_pred, average='weighted')
-    }
-    return metrics
+    Parameters:
+        actual_values (list or np.array): True values
+        predicted_values (list or np.array): Model predictions
 
+    Returns:
+        list of tuples: (percentage difference, index)
+    """
+    if len(actual_values) != len(predicted_values):
+        raise ValueError("Both lists must be of the same length")
 
+    results = []
+    for i, (actual, predicted) in enumerate(zip(actual_values, predicted_values)):
+        if actual < predicted:
+            percent_lower = ((predicted - actual) / predicted) * 100
+            results.append((percent_lower, i))
+
+    return results
